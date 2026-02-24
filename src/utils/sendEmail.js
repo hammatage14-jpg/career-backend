@@ -177,7 +177,25 @@ export async function sendApplicationStatusChangedEmail({ to, name, opportunityT
   let html;
   let text;
 
-  if (lowered === 'accepted') {
+  if (lowered === 'shortlisted') {
+    subject = `You’ve been shortlisted for ${opportunityTitle}`;
+    html = `
+      <p>Hi ${name || 'there'},</p>
+      <p>Great news — you’ve been <strong>SHORTLISTED</strong> for <strong>${opportunityTitle}</strong>.</p>
+      <p>You have been scheduled for a virtual interview approximately five days from today. The hiring company or our team will send you the exact date, time and meeting link shortly.</p>
+      <p>Please keep an eye on your inbox and your CareerStart dashboard so you don’t miss any updates.</p>
+      <p>— CareerStart Team</p>
+    `;
+    text = `Hi ${name || 'there'},
+
+Great news — you’ve been SHORTLISTED for "${opportunityTitle}".
+
+You have been scheduled for a virtual interview approximately five days from today. The hiring company or our team will send you the exact date, time and meeting link shortly.
+
+Please keep an eye on your inbox and your CareerStart dashboard so you don’t miss any updates.
+
+— CareerStart Team`;
+  } else if (lowered === 'accepted') {
     subject = `Congratulations — your application for ${opportunityTitle} was accepted`;
     html = `
       <p>Hi ${name || 'there'},</p>
