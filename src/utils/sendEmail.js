@@ -113,16 +113,27 @@ If you didn't request this, you can safely ignore this email.
 export async function sendWelcomeEmail(to, name) {
   const html = `
     <p>Hi ${name || 'there'},</p>
-    <p>Welcome to <strong>CareerStart</strong>! Your account is now active and you can start browsing and applying for opportunities.</p>
-    <p>Log in to your dashboard to complete your profile and track your applications.</p>
+    <p>Welcome to <strong>CareerStart</strong> — your hub for internships, attachments and early‑career opportunities.</p>
+    <p>Here’s what you can do next:</p>
+    <ul>
+      <li><strong>Complete your profile</strong> so employers can quickly understand your skills and experience.</li>
+      <li><strong>Browse live opportunities</strong> and save the ones that match your interests.</li>
+      <li><strong>Apply in a few clicks</strong> and track every application from your dashboard.</li>
+    </ul>
+    <p>We’re excited to be part of your journey.</p>
     <p>— CareerStart Team</p>
   `;
 
   const text = `Hi ${name || 'there'},
 
-Welcome to CareerStart! Your account is now active and you can start browsing and applying for opportunities.
+Welcome to CareerStart — your hub for internships, attachments and early‑career opportunities.
 
-Log in to your dashboard to complete your profile and track your applications.
+Here’s what you can do next:
+- Complete your profile so employers can quickly understand your skills and experience.
+- Browse live opportunities and save the ones that match your interests.
+- Apply in a few clicks and track every application from your dashboard.
+
+We’re excited to be part of your journey.
 
 — CareerStart Team`;
 
