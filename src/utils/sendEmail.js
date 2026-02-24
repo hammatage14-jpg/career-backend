@@ -149,37 +149,39 @@ We’re excited to be part of your journey.
 export async function sendApplicationReceivedEmail({ to, name, opportunityTitle }) {
   const html = `
     <p>Hi ${name || 'there'},</p>
-    <p>Thank you for submitting your application for <strong>${opportunityTitle}</strong>.</p>
-    <p>We've received all your documents and we're impressed by your interest in this opportunity. Our team is now reviewing your application carefully.</p>
+    <p>Thank you for submitting your application for <strong>${opportunityTitle}</strong>. We're excited to review it!</p>
+    <p>We've successfully received all your documents, and we're genuinely impressed by your interest in this opportunity.</p>
     <p><strong>What happens next:</strong></p>
     <ul>
-      <li>Our review team will evaluate your qualifications and experience</li>
-      <li>If you're a strong match, we'll notify you about the next steps</li>
-      <li>You can track your application status anytime from your CareerStart dashboard</li>
+      <li><strong>Application Review:</strong> Our team will carefully evaluate your qualifications, experience, and potential fit</li>
+      <li><strong>Timeline:</strong> You can expect an update within 7-10 business days</li>
+      <li><strong>Real-time Tracking:</strong> Check your CareerStart dashboard anytime to see your application status</li>
+      <li><strong>Stay Informed:</strong> We'll notify you via email about any updates or next steps</li>
     </ul>
-    <p>We'll keep you updated every step of the way. Keep an eye on your inbox for updates.</p>
+    <p>In the meantime, feel free to explore other opportunities on CareerStart and continue building your profile. We'll be in touch soon!</p>
     <p>— The CareerStart Team</p>
   `;
 
   const text = `Hi ${name || 'there'},
 
-Thank you for submitting your application for "${opportunityTitle}".
+Thank you for submitting your application for "${opportunityTitle}". We're excited to review it!
 
-We've received all your documents and we're impressed by your interest in this opportunity. Our team is now reviewing your application carefully.
+We've successfully received all your documents, and we're genuinely impressed by your interest in this opportunity.
 
 What happens next:
-- Our review team will evaluate your qualifications and experience
-- If you're a strong match, we'll notify you about the next steps
-- You can track your application status anytime from your CareerStart dashboard
+- Application Review: Our team will carefully evaluate your qualifications, experience, and potential fit
+- Timeline: You can expect an update within 7-10 business days
+- Real-time Tracking: Check your CareerStart dashboard anytime to see your application status
+- Stay Informed: We'll notify you via email about any updates or next steps
 
-We'll keep you updated every step of the way. Keep an eye on your inbox for updates.
+In the meantime, feel free to explore other opportunities on CareerStart and continue building your profile. We'll be in touch soon!
 
 — The CareerStart Team`;
 
   return safeSendEmail({
     from: resendFrom,
     to,
-    subject: `Your application for ${opportunityTitle} was received`,
+    subject: `We've received your application for ${opportunityTitle} 📋`,
     html,
     text,
   });
