@@ -3,12 +3,14 @@ import multer from 'multer';
 import Application from '../models/Application.js';
 import Opportunity from '../models/Opportunity.js';
 import User from '../models/User.js';
+import Message from '../models/Message.js';
 import { protect, adminOnly } from '../middleware/auth.js';
 import { uploadToCloudinary } from '../utils/cloudinary.js';
 import {
   sendApplicationReceivedEmail,
   sendApplicationStatusChangedEmail,
   sendAdminNewApplicationEmail,
+  sendApplicationReminderEmail,
 } from '../utils/sendEmail.js';
 import {
   initializeTransaction,
@@ -89,6 +91,59 @@ router.post('/admin/:id/refund', protect, adminOnly, async (req, res) => {
     res.json({ message: 'Refund initiated', refundAmount: amount });
   } catch (err) {
     res.status(400).json({ message: err.message || 'Refund failed' });
+  }
+});
+
+// Admin: send manual reminder to user for incomplete application
+router.post('/admin/:id/send-reminder', protect, adminOnly, async (req, res) => {
+  try {
+    const application = await Application.findById(req.params.id)
+      .populate('userId', 'name email')
+      .populate('opportunityId', 'title');
+
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+
+    if (!application.userId || !application.opportunityId) {
+      return res.status(400).json({ message: 'User or opportunity not found' });
+    }
+
+    // Send reminder email
+    const dashboardUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard`;
+    const emailResult = await sendApplicationReminderEmail({
+      to: application.userId.email,
+      name: application.userId.name,
+      opportunityTitle: application.opportunityId.title,
+      resumeUrl: application.resumeUrl,
+      dashboardUrl,
+    });
+
+    if (!emailResult.ok) {
+      return res.status(400).json({ message: 'Failed to send reminder email' });
+    }
+
+    // Create message record in database
+    const message = new Message({
+      userId: application.userId._id,
+      applicationId: application._id,
+      opportunityId: application.opportunityId._id,
+      type: 'payment_reminder',
+      subject: `Complete your application for ${application.opportunityId.title}`,
+      content: `Manual reminder sent by admin. Please complete your application.`,
+      emailSent: true,
+      sentAt: new Date(),
+    });
+
+    await message.save();
+
+    res.json({
+      message: 'Reminder sent successfully',
+      email: application.userId.email,
+      sentAt: new Date(),
+    });
+  } catch (err) {
+    res.status(400).json({ message: err.message || 'Failed to send reminder' });
   }
 });
 
