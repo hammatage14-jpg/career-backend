@@ -6,6 +6,11 @@ import User from '../models/User.js';
 import { protect, adminOnly } from '../middleware/auth.js';
 import { uploadToCloudinary } from '../utils/cloudinary.js';
 import {
+  sendApplicationReceivedEmail,
+  sendApplicationStatusChangedEmail,
+  sendAdminNewApplicationEmail,
+} from '../utils/sendEmail.js';
+import {
   initializeTransaction,
   chargeMpesa,
   verifyTransaction,
@@ -143,6 +148,14 @@ router.patch('/admin/:id/status', protect, adminOnly, async (req, res) => {
       .populate('userId', 'name email')
       .lean();
     if (!application) return res.status(404).json({ message: 'Application not found' });
+    if (application.userId?.email && application.opportunityId?.title) {
+      void sendApplicationStatusChangedEmail({
+        to: application.userId.email,
+        name: application.userId.name,
+        opportunityTitle: application.opportunityId.title,
+        status,
+      });
+    }
     res.json(application);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -304,6 +317,25 @@ export async function paystackWebhookHandler(req, res) {
             paystackCardLast4: auth?.last4 || null,
             paystackCardType: auth?.card_type || null,
           });
+        }
+        const [user, opp] = await Promise.all([
+          application.userId ? User.findById(application.userId).select('name email').lean() : null,
+          application.opportunityId ? Opportunity.findById(application.opportunityId).select('title').lean() : null,
+        ]);
+        if (user?.email && opp?.title) {
+          void sendApplicationReceivedEmail({
+            to: user.email,
+            name: user.name,
+            opportunityTitle: opp.title,
+          });
+          if (process.env.ADMIN_EMAIL) {
+            void sendAdminNewApplicationEmail({
+              to: process.env.ADMIN_EMAIL,
+              opportunityTitle: opp.title,
+              applicantName: user.name || 'Applicant',
+              applicantEmail: user.email,
+            });
+          }
         }
       }
     }

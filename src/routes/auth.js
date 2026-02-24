@@ -5,7 +5,7 @@ import { body, validationResult } from 'express-validator';
 import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User.js';
 import { protect } from '../middleware/auth.js';
-import { sendOTPEmail, sendPasswordResetEmail } from '../utils/sendEmail.js';
+import { sendOTPEmail, sendPasswordResetEmail, sendWelcomeEmail } from '../utils/sendEmail.js';
 import { generateOTP, hashOTP } from '../utils/otp.js';
 
 const router = express.Router();
@@ -233,6 +233,10 @@ router.post(
       user.emailOTP = undefined;
       user.emailOTPExpires = undefined;
       await user.save();
+      if (user.email) {
+        // Fire-and-forget; don't block response on welcome email
+        void sendWelcomeEmail(user.email, user.name);
+      }
       const u = { _id: user._id, name: user.name, email: user.email, role: user.role, avatar: user.avatar, emailVerified: true };
       res.json({
         message: 'Email verified successfully',

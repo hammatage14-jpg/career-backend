@@ -109,3 +109,120 @@ If you didn't request this, you can safely ignore this email.
 
   return result;
 }
+
+export async function sendWelcomeEmail(to, name) {
+  const html = `
+    <p>Hi ${name || 'there'},</p>
+    <p>Welcome to <strong>CareerStart</strong>! Your account is now active and you can start browsing and applying for opportunities.</p>
+    <p>Log in to your dashboard to complete your profile and track your applications.</p>
+    <p>— CareerStart Team</p>
+  `;
+
+  const text = `Hi ${name || 'there'},
+
+Welcome to CareerStart! Your account is now active and you can start browsing and applying for opportunities.
+
+Log in to your dashboard to complete your profile and track your applications.
+
+— CareerStart Team`;
+
+  return safeSendEmail({
+    from: resendFrom,
+    to,
+    subject: 'Welcome to CareerStart',
+    html,
+    text,
+  });
+}
+
+export async function sendApplicationReceivedEmail({ to, name, opportunityTitle }) {
+  const html = `
+    <p>Hi ${name || 'there'},</p>
+    <p>We’ve received your application for <strong>${opportunityTitle}</strong>.</p>
+    <p>Our team (or the hiring company) will review your application. You can track the status from your CareerStart dashboard.</p>
+    <p>— CareerStart Team</p>
+  `;
+
+  const text = `Hi ${name || 'there'},
+
+We’ve received your application for "${opportunityTitle}".
+
+Our team (or the hiring company) will review your application. You can track the status from your CareerStart dashboard.
+
+— CareerStart Team`;
+
+  return safeSendEmail({
+    from: resendFrom,
+    to,
+    subject: `Your application for ${opportunityTitle} was received`,
+    html,
+    text,
+  });
+}
+
+export async function sendApplicationStatusChangedEmail({ to, name, opportunityTitle, status }) {
+  const html = `
+    <p>Hi ${name || 'there'},</p>
+    <p>The status of your application for <strong>${opportunityTitle}</strong> has changed to <strong>${status}</strong>.</p>
+    <p>Log in to your CareerStart dashboard for full details.</p>
+    <p>— CareerStart Team</p>
+  `;
+
+  const text = `Hi ${name || 'there'},
+
+The status of your application for "${opportunityTitle}" has changed to: ${status}.
+
+Log in to your CareerStart dashboard for full details.
+
+— CareerStart Team`;
+
+  return safeSendEmail({
+    from: resendFrom,
+    to,
+    subject: `Your application status changed: ${status}`,
+    html,
+    text,
+  });
+}
+
+export async function sendAdminNewOpportunityEmail({ to, title, company }) {
+  const html = `
+    <p>New opportunity created on CareerStart.</p>
+    <p><strong>Title:</strong> ${title}</p>
+    <p><strong>Company:</strong> ${company}</p>
+  `;
+
+  const text = `New opportunity created on CareerStart.
+
+Title: ${title}
+Company: ${company}`;
+
+  return safeSendEmail({
+    from: resendFrom,
+    to,
+    subject: `New opportunity posted: ${title}`,
+    html,
+    text,
+  });
+}
+
+export async function sendAdminNewApplicationEmail({ to, opportunityTitle, applicantName, applicantEmail }) {
+  const html = `
+    <p>New application submitted on CareerStart.</p>
+    <p><strong>Opportunity:</strong> ${opportunityTitle}</p>
+    <p><strong>Applicant:</strong> ${applicantName} (${applicantEmail})</p>
+  `;
+
+  const text = `New application submitted on CareerStart.
+
+Opportunity: ${opportunityTitle}
+Applicant: ${applicantName} (${applicantEmail})`;
+
+  return safeSendEmail({
+    from: resendFrom,
+    to,
+    subject: `New application for ${opportunityTitle}`,
+    html,
+    text,
+  });
+}

@@ -4,6 +4,7 @@ import Opportunity from '../models/Opportunity.js';
 import User from '../models/User.js';
 import { protect, adminOnly } from '../middleware/auth.js';
 import { body, validationResult } from 'express-validator';
+import { sendAdminNewOpportunityEmail } from '../utils/sendEmail.js';
 
 const router = express.Router();
 
@@ -161,6 +162,13 @@ router.post(
       const errors = validationResult(req);
       if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
       const opportunity = await Opportunity.create(req.body);
+      if (process.env.ADMIN_EMAIL) {
+        void sendAdminNewOpportunityEmail({
+          to: process.env.ADMIN_EMAIL,
+          title: opportunity.title,
+          company: opportunity.company,
+        });
+      }
       res.status(201).json(opportunity);
     } catch (err) {
       res.status(500).json({ message: err.message });
