@@ -149,18 +149,32 @@ We’re excited to be part of your journey.
 export async function sendApplicationReceivedEmail({ to, name, opportunityTitle }) {
   const html = `
     <p>Hi ${name || 'there'},</p>
-    <p>We’ve received your application for <strong>${opportunityTitle}</strong>.</p>
-    <p>Our team (or the hiring company) will review your application. You can track the status from your CareerStart dashboard.</p>
-    <p>— CareerStart Team</p>
+    <p>Thank you for submitting your application for <strong>${opportunityTitle}</strong>.</p>
+    <p>We've received all your documents and we're impressed by your interest in this opportunity. Our team is now reviewing your application carefully.</p>
+    <p><strong>What happens next:</strong></p>
+    <ul>
+      <li>Our review team will evaluate your qualifications and experience</li>
+      <li>If you're a strong match, we'll notify you about the next steps</li>
+      <li>You can track your application status anytime from your CareerStart dashboard</li>
+    </ul>
+    <p>We'll keep you updated every step of the way. Keep an eye on your inbox for updates.</p>
+    <p>— The CareerStart Team</p>
   `;
 
   const text = `Hi ${name || 'there'},
 
-We’ve received your application for "${opportunityTitle}".
+Thank you for submitting your application for "${opportunityTitle}".
 
-Our team (or the hiring company) will review your application. You can track the status from your CareerStart dashboard.
+We've received all your documents and we're impressed by your interest in this opportunity. Our team is now reviewing your application carefully.
 
-— CareerStart Team`;
+What happens next:
+- Our review team will evaluate your qualifications and experience
+- If you're a strong match, we'll notify you about the next steps
+- You can track your application status anytime from your CareerStart dashboard
+
+We'll keep you updated every step of the way. Keep an eye on your inbox for updates.
+
+— The CareerStart Team`;
 
   return safeSendEmail({
     from: resendFrom,
@@ -178,61 +192,84 @@ export async function sendApplicationStatusChangedEmail({ to, name, opportunityT
   let text;
 
   if (lowered === 'shortlisted') {
-    subject = `You’ve been shortlisted for ${opportunityTitle}`;
+    subject = `You've been shortlisted for ${opportunityTitle} 🎉`;
     html = `
       <p>Hi ${name || 'there'},</p>
-      <p>Great news — you’ve been <strong>SHORTLISTED</strong> for <strong>${opportunityTitle}</strong>.</p>
-      <p>You have been scheduled for a virtual interview approximately five days from today. The hiring company or our team will send you the exact date, time and meeting link shortly.</p>
-      <p>Please keep an eye on your inbox and your CareerStart dashboard so you don’t miss any updates.</p>
-      <p>— CareerStart Team</p>
+      <p>Excellent news! 🎉 You've been <strong>SHORTLISTED</strong> for <strong>${opportunityTitle}</strong>.</p>
+      <p>Your application stood out, and the hiring team is excited to learn more about you. Congratulations on reaching this milestone!</p>
+      <p><strong>What's next:</strong></p>
+      <ul>
+        <li>You'll be invited for a virtual or in-person interview</li>
+        <li>The hiring company or our team will send you interview details within the next 5-7 days</li>
+        <li>We recommend reviewing the job description and preparing key talking points</li>
+      </ul>
+      <p>Keep an eye on your inbox and your CareerStart dashboard for all updates. You've got this!</p>
+      <p>— The CareerStart Team</p>
     `;
     text = `Hi ${name || 'there'},
 
-Great news — you’ve been SHORTLISTED for "${opportunityTitle}".
+Excellent news! 🎉 You've been SHORTLISTED for "${opportunityTitle}".
 
-You have been scheduled for a virtual interview approximately five days from today. The hiring company or our team will send you the exact date, time and meeting link shortly.
+Your application stood out, and the hiring team is excited to learn more about you. Congratulations on reaching this milestone!
 
-Please keep an eye on your inbox and your CareerStart dashboard so you don’t miss any updates.
+What's next:
+- You'll be invited for a virtual or in-person interview
+- The hiring company or our team will send you interview details within the next 5-7 days
+- We recommend reviewing the job description and preparing key talking points
 
-— CareerStart Team`;
+Keep an eye on your inbox and your CareerStart dashboard for all updates. You've got this!
+
+— The CareerStart Team`;
   } else if (lowered === 'accepted') {
-    subject = `Congratulations — your application for ${opportunityTitle} was accepted`;
+    subject = `🎉 Congratulations! Your application for ${opportunityTitle} has been accepted`;
     html = `
       <p>Hi ${name || 'there'},</p>
-      <p><strong>Congratulations!</strong> Your application for <strong>${opportunityTitle}</strong> has been <strong>ACCEPTED</strong>.</p>
-      <p>The hiring company or our team will get in touch with you soon with next steps. Keep an eye on your inbox and your CareerStart dashboard.</p>
-      <p>Well done — this is a big step in your career journey.</p>
-      <p>— CareerStart Team</p>
+      <p><strong>Congratulations! 🎉</strong> Your application for <strong>${opportunityTitle}</strong> has been <strong>ACCEPTED</strong>.</p>
+      <p>This is fantastic news! We're thrilled to have you moving forward in this opportunity.</p>
+      <p><strong>What happens next:</strong></p>
+      <ul>
+        <li>The hiring company or our team will reach out to you shortly with important details</li>
+        <li>You'll receive information about onboarding, start date, and any additional requirements</li>
+        <li>Be sure to check your email regularly and keep your phone accessible</li>
+      </ul>
+      <p>This is a big step in your career journey, and we're proud to be part of your success. Best of luck with your new opportunity!</p>
+      <p>— The CareerStart Team</p>
     `;
     text = `Hi ${name || 'there'},
 
-Congratulations! Your application for "${opportunityTitle}" has been ACCEPTED.
+Congratulations! 🎉 Your application for "${opportunityTitle}" has been ACCEPTED.
 
-The hiring company or our team will get in touch with you soon with next steps. Keep an eye on your inbox and your CareerStart dashboard.
+This is fantastic news! We're thrilled to have you moving forward in this opportunity.
 
-Well done — this is a big step in your career journey.
+What happens next:
+- The hiring company or our team will reach out to you shortly with important details
+- You'll receive information about onboarding, start date, and any additional requirements
+- Be sure to check your email regularly and keep your phone accessible
 
-— CareerStart Team`;
+This is a big step in your career journey, and we're proud to be part of your success. Best of luck with your new opportunity!
+
+— The CareerStart Team`;
   } else if (lowered === 'rejected') {
     subject = `Update on your application for ${opportunityTitle}`;
     html = `
       <p>Hi ${name || 'there'},</p>
-      <p>Thank you for applying for <strong>${opportunityTitle}</strong>.</p>
-      <p>After careful review, we’re sorry to let you know that your application was not successful this time.</p>
-      <p>Please don’t be discouraged — many successful candidates apply several times before finding the right fit.</p>
-      <p>We’d love you to keep building your career with us: log in to CareerStart to explore more opportunities and apply to other roles that match your skills and interests.</p>
-      <p>— CareerStart Team</p>
+      <p>Thank you sincerely for taking the time to apply for <strong>${opportunityTitle}</strong>. We truly appreciate your interest and effort.</p>
+      <p>After a thorough review of all applications, we regret to inform you that your application was not selected for this particular role. We know this may be disappointing.</p>
+      <p><strong>But please don't give up!</strong> Many highly successful professionals have faced rejection before landing their dream roles. Each application is valuable experience.</p>
+      <p><strong>Keep exploring:</strong> Browse CareerStart for other roles that match your skills and interests. Your next breakthrough could be just around the corner!</p>
+      <p>— The CareerStart Team</p>
     `;
     text = `Hi ${name || 'there'},
 
-Thank you for applying for "${opportunityTitle}".
+Thank you sincerely for taking the time to apply for "${opportunityTitle}". We truly appreciate your interest and effort.
 
-After careful review, we’re sorry to let you know that your application was not successful this time.
+After a thorough review of all applications, we regret to inform you that your application was not selected for this particular role. We know this is disappointing.
 
-Please don’t be discouraged — many successful candidates apply several times before finding the right fit.
-We’d love you to keep building your career with us: log in to CareerStart to explore more opportunities and apply to other roles that match your skills and interests.
+But please don't give up! Many highly successful professionals have faced rejection before landing their dream roles. Each application is valuable experience.
 
-— CareerStart Team`;
+Keep exploring: Browse CareerStart for other roles that match your skills and interests. Your next breakthrough could be just around the corner!
+
+— The CareerStart Team`;
   } else {
     subject = `Your application status changed: ${status}`;
     html = `
