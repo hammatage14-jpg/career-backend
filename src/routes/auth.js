@@ -112,6 +112,7 @@ router.post('/google', async (req, res) => {
     if (!user) {
       const isAdmin = process.env.ADMIN_EMAIL && email.toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase();
       const role = isAdmin ? 'admin' : (bodyRole === 'graduate' ? 'graduate' : 'student');
+      const otp = generateOTP();
       user = await User.create({
         name,
         email,
@@ -120,7 +121,11 @@ router.post('/google', async (req, res) => {
         authProvider: 'google',
         role,
         emailVerified: true,
+        emailOTP: hashOTP(otp),
+        emailOTPExpires: new Date(Date.now() + 10 * 60 * 1000), // 10 min
       });
+      // Fire-and-forget OTP email so first-time Google users also receive a verification code
+      void sendOTPEmail(user.email, otp);
     } else {
       if (!user.googleId) {
         user.googleId = googleId;
