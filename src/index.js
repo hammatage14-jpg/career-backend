@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { connectDB } from './config/db.js';
+import { initializeScheduler } from './utils/scheduler.js';
 import authRoutes from './routes/auth.js';
 import opportunityRoutes from './routes/opportunities.js';
 import applicationRoutes, { paystackWebhookHandler } from './routes/applications.js';
@@ -44,7 +45,9 @@ app.use('/api/messages', messageRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
+  await connectDB();
+  initializeScheduler();
   console.log(`Server running on port ${PORT}`);
 });
 

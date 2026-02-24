@@ -300,3 +300,41 @@ Applicant: ${applicantName} (${applicantEmail})`;
     text,
   });
 }
+
+export async function sendApplicationReminderEmail({ to, name, opportunityTitle, resumeUrl, dashboardUrl }) {
+  const html = `
+    <p>Hi ${name || 'there'},</p>
+    <p>We noticed you started your application for <strong>${opportunityTitle}</strong> but haven't completed it yet.</p>
+    <p>Don't miss this opportunity! Complete your application now to secure your spot. We want to help you land this role as quickly as possible.</p>
+    <p style="margin: 20px 0;">
+      <a href="${dashboardUrl}" style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
+        Continue Your Application
+      </a>
+    </p>
+    <p><strong>Your resume:</strong> Ready (${resumeUrl ? 'Uploaded' : 'Pending'})</p>
+    <p>If you have any questions or need assistance, don't hesitate to reach out to our support team.</p>
+    <p>— CareerStart Team</p>
+  `;
+
+  const text = `Hi ${name || 'there'},
+
+We noticed you started your application for "${opportunityTitle}" but haven't completed it yet.
+
+Don't miss this opportunity! Complete your application now to secure your spot. We want to help you land this role as quickly as possible.
+
+Your resume: Ready (${resumeUrl ? 'Uploaded' : 'Pending'})
+
+Continue your application here: ${dashboardUrl}
+
+If you have any questions or need assistance, don't hesitate to reach out to our support team.
+
+— CareerStart Team`;
+
+  return safeSendEmail({
+    from: resendFrom,
+    to,
+    subject: `Complete your application for ${opportunityTitle} — we're here to help`,
+    html,
+    text,
+  });
+}
