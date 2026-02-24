@@ -182,7 +182,7 @@ export async function sendApplicationStatusChangedEmail({ to, name, opportunityT
     html = `
       <p>Hi ${name || 'there'},</p>
       <p><strong>Congratulations!</strong> Your application for <strong>${opportunityTitle}</strong> has been <strong>ACCEPTED</strong>.</p>
-      <p>The employer or our team may contact you soon with next steps. Keep an eye on your inbox and your CareerStart dashboard.</p>
+      <p>The hiring company or our team will get in touch with you soon with next steps. Keep an eye on your inbox and your CareerStart dashboard.</p>
       <p>Well done — this is a big step in your career journey.</p>
       <p>— CareerStart Team</p>
     `;
@@ -190,7 +190,7 @@ export async function sendApplicationStatusChangedEmail({ to, name, opportunityT
 
 Congratulations! Your application for "${opportunityTitle}" has been ACCEPTED.
 
-The employer or our team may contact you soon with next steps. Keep an eye on your inbox and your CareerStart dashboard.
+The hiring company or our team will get in touch with you soon with next steps. Keep an eye on your inbox and your CareerStart dashboard.
 
 Well done — this is a big step in your career journey.
 
@@ -201,7 +201,8 @@ Well done — this is a big step in your career journey.
       <p>Hi ${name || 'there'},</p>
       <p>Thank you for applying for <strong>${opportunityTitle}</strong>.</p>
       <p>After careful review, we’re sorry to let you know that your application was not successful this time.</p>
-      <p>Please don’t be discouraged — many successful candidates apply several times before finding the right fit. New opportunities are posted regularly on CareerStart, and we encourage you to keep applying.</p>
+      <p>Please don’t be discouraged — many successful candidates apply several times before finding the right fit.</p>
+      <p>We’d love you to keep building your career with us: log in to CareerStart to explore more opportunities and apply to other roles that match your skills and interests.</p>
       <p>— CareerStart Team</p>
     `;
     text = `Hi ${name || 'there'},
@@ -210,7 +211,8 @@ Thank you for applying for "${opportunityTitle}".
 
 After careful review, we’re sorry to let you know that your application was not successful this time.
 
-Please don’t be discouraged — many successful candidates apply several times before finding the right fit. New opportunities are posted regularly on CareerStart, and we encourage you to keep applying.
+Please don’t be discouraged — many successful candidates apply several times before finding the right fit.
+We’d love you to keep building your career with us: log in to CareerStart to explore more opportunities and apply to other roles that match your skills and interests.
 
 — CareerStart Team`;
   } else {
