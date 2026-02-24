@@ -35,7 +35,7 @@ const transporter = nodemailer.createTransport({
 transporter.sendMail({
   from: process.env.SMTP_FROM || user,
   to,
-  subject: 'SMTP Test — IAS',
+  subject: 'SMTP Test — CareerStart',
   text: 'If you got this, SMTP is working.',
 })
   .then(() => console.log('SUCCESS: Email sent to', to))
