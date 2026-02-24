@@ -172,25 +172,68 @@ Our team (or the hiring company) will review your application. You can track the
 }
 
 export async function sendApplicationStatusChangedEmail({ to, name, opportunityTitle, status }) {
-  const html = `
-    <p>Hi ${name || 'there'},</p>
-    <p>The status of your application for <strong>${opportunityTitle}</strong> has changed to <strong>${status}</strong>.</p>
-    <p>Log in to your CareerStart dashboard for full details.</p>
-    <p>— CareerStart Team</p>
-  `;
+  const lowered = String(status || '').toLowerCase();
+  let subject;
+  let html;
+  let text;
 
-  const text = `Hi ${name || 'there'},
+  if (lowered === 'accepted') {
+    subject = `Congratulations — your application for ${opportunityTitle} was accepted`;
+    html = `
+      <p>Hi ${name || 'there'},</p>
+      <p><strong>Congratulations!</strong> Your application for <strong>${opportunityTitle}</strong> has been <strong>ACCEPTED</strong>.</p>
+      <p>The employer or our team may contact you soon with next steps. Keep an eye on your inbox and your CareerStart dashboard.</p>
+      <p>Well done — this is a big step in your career journey.</p>
+      <p>— CareerStart Team</p>
+    `;
+    text = `Hi ${name || 'there'},
+
+Congratulations! Your application for "${opportunityTitle}" has been ACCEPTED.
+
+The employer or our team may contact you soon with next steps. Keep an eye on your inbox and your CareerStart dashboard.
+
+Well done — this is a big step in your career journey.
+
+— CareerStart Team`;
+  } else if (lowered === 'rejected') {
+    subject = `Update on your application for ${opportunityTitle}`;
+    html = `
+      <p>Hi ${name || 'there'},</p>
+      <p>Thank you for applying for <strong>${opportunityTitle}</strong>.</p>
+      <p>After careful review, we’re sorry to let you know that your application was not successful this time.</p>
+      <p>Please don’t be discouraged — many successful candidates apply several times before finding the right fit. New opportunities are posted regularly on CareerStart, and we encourage you to keep applying.</p>
+      <p>— CareerStart Team</p>
+    `;
+    text = `Hi ${name || 'there'},
+
+Thank you for applying for "${opportunityTitle}".
+
+After careful review, we’re sorry to let you know that your application was not successful this time.
+
+Please don’t be discouraged — many successful candidates apply several times before finding the right fit. New opportunities are posted regularly on CareerStart, and we encourage you to keep applying.
+
+— CareerStart Team`;
+  } else {
+    subject = `Your application status changed: ${status}`;
+    html = `
+      <p>Hi ${name || 'there'},</p>
+      <p>The status of your application for <strong>${opportunityTitle}</strong> has changed to <strong>${status}</strong>.</p>
+      <p>Log in to your CareerStart dashboard for full details.</p>
+      <p>— CareerStart Team</p>
+    `;
+    text = `Hi ${name || 'there'},
 
 The status of your application for "${opportunityTitle}" has changed to: ${status}.
 
 Log in to your CareerStart dashboard for full details.
 
 — CareerStart Team`;
+  }
 
   return safeSendEmail({
     from: resendFrom,
     to,
-    subject: `Your application status changed: ${status}`,
+    subject,
     html,
     text,
   });
